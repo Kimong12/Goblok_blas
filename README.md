@@ -1,75 +1,228 @@
-<header>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hans uji coba</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-image: url('bot3.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    #game-container {
+      background-color: ;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: fit-content;
+    }#grid {
+  display: grid;
+  grid-template-columns: repeat(10, 30px);
+  grid-template-rows: repeat(10, 30px);
+  gap: 2px;
+  margin: 20px;
+  position: relative;
+}
 
-<!--
-  <<< Author notes: Course header >>>
-  Include a 1280×640 image, course title in sentence case, and a concise description in emphasis.
-  In your repository settings: enable template repository, add your 1280×640 social image, auto delete head branches.
-  Add your open source license, GitHub uses MIT license.
--->
+.cell {
+  width: 30px;
+  height: 30px;
+  background-color: #000;
+  border: 1px solid black;
+  box-shadow: inset 0 0 5px gold;
+  transition: background-color 0.2s ease;
+}
 
-# GitHub Pages
+.filled {
+  background-color: var(--block-color, #007bff) !important;
+}
 
-_Create a site or blog from your GitHub repositories with GitHub Pages._
+#blocks {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
 
-</header>
+.block {
+  display: grid;
+  grid-template-columns: repeat(3, 20px);
+  grid-template-rows: repeat(3, 20px);
+  gap: 2px;
+  background-color: transparent;
+  touch-action: none;
+}
 
-<!--
-  <<< Author notes: Course start >>>
-  Include start button, a note about Actions minutes,
-  and tell the learner why they should take the course.
--->
+.block-cell {
+  width: 20px;
+  height: 20px;
+  background-color: var(--block-color, #444);
+  border-radius: 4px;
+}
 
-## Welcome
+  </style>
+</head>
+<body>
+  <h1>-</h1>
+  <div id="game-container">
+    <div id="blocks"></div>
+    <div id="grid"></div>
+    <p id="score">Score: 0</p>
+  </div>
+  <script>
+    const grid = document.getElementById("grid");
+    const blocksContainer = document.getElementById("blocks");
+    const scoreDisplay = document.getElementById("score");
+    let score = 0;
+    const gridCells = [];
+    for (let i = 0; i < 100; i++) {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      grid.appendChild(cell);
+      gridCells.push(cell);
+    }const blockShapes = [
+  [[1, 1, 1]],
+  [[1], [1], [1]],
+  [[1, 1], [1, 0]],
+  [[1, 1], [0, 1]],
+  [[1, 1], [1, 1]]
+];
 
-With GitHub Pages, you can host project blogs, documentation, resumes, portfolios, or any other static content you'd like. Your GitHub repository can easily become its own website. In this course, we'll show you how to set up your own site or blog using GitHub Pages.
+const colors = ["#e74c3c", "#8e44ad", "#3498db", "#27ae60", "#f39c12", "#d35400", "#1abc9c"];
 
-- **Who is this for**: Beginners, students, project maintainers, small businesses.
-- **What you'll learn**: How to build a GitHub Pages site.
-- **What you'll build**: We'll build a simple GitHub Pages site with a blog. We'll use [Jekyll](https://jekyllrb.com), a static site generator.
-- **Prerequisites**: If you need to learn about branches, commits, and pull requests, take [Introduction to GitHub](https://github.com/skills/introduction-to-github) first.
-- **How long**: This course takes less than one hour to complete.
+function createBlock(shape) {
+  const block = document.createElement("div");
+  block.classList.add("block");
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  block.style.setProperty('--block-color', color);
+  block.dataset.shape = JSON.stringify(shape);
 
-In this course, you will:
+  shape.forEach((row, y) => {
+    row.forEach((val, x) => {
+      if (val) {
+        const cell = document.createElement("div");
+        cell.classList.add("block-cell");
+        cell.style.gridRowStart = y + 1;
+        cell.style.gridColumnStart = x + 1;
+        block.appendChild(cell);
+      }
+    });
+  });
 
-1. Enable GitHub Pages
-2. Configure your site
-3. Customize your home page
-4. Create a blog post
-5. Merge your pull request
+  block.addEventListener("touchstart", onTouchStart);
+  blocksContainer.appendChild(block);
+}
 
-### How to start this course
+function generateBlocks() {
+  blocksContainer.innerHTML = "";
+  for (let i = 0; i < 3; i++) {
+    const shape = blockShapes[Math.floor(Math.random() * blockShapes.length)];
+    createBlock(shape);
+  }
+}
 
-<!-- For start course, run in JavaScript:
-'https://github.com/new?' + new URLSearchParams({
-  template_owner: 'skills',
-  template_name: 'github-pages',
-  owner: '@me',
-  name: 'skills-github-pages',
-  description: 'My clone repository',
-  visibility: 'public',
-}).toString()
--->
+let activeBlock = null;
+let offsetX = 0;
+let offsetY = 0;
 
-[![start-course](https://user-images.githubusercontent.com/1221423/235727646-4a590299-ffe5-480d-8cd5-8194ea184546.svg)](https://github.com/new?template_owner=skills&template_name=github-pages&owner=%40me&name=skills-github-pages&description=My+clone+repository&visibility=public)
+function onTouchStart(e) {
+  const original = e.currentTarget;
+  activeBlock = original.cloneNode(true);
+  activeBlock.style.position = "absolute";
+  activeBlock.style.zIndex = 1000;
+  activeBlock.style.setProperty('--block-color', original.style.getPropertyValue('--block-color'));
+  document.body.appendChild(activeBlock);
+  offsetX = e.touches[0].clientX - original.getBoundingClientRect().left;
+  offsetY = e.touches[0].clientY - original.getBoundingClientRect().top;
+  moveBlock(e);
 
-1. Right-click **Start course** and open the link in a new tab.
-2. In the new tab, most of the prompts will automatically fill in for you.
-   - For owner, choose your personal account or an organization to host the repository.
-   - We recommend creating a public repository, as private repositories will [use Actions minutes](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions).
-   - Scroll down and click the **Create repository** button at the bottom of the form.
-3. After your new repository is created, wait about 20 seconds, then refresh the page. Follow the step-by-step instructions in the new repository's README.
+  document.addEventListener("touchmove", moveBlock);
+  document.addEventListener("touchend", onTouchEnd);
+}
 
-<footer>
+function moveBlock(e) {
+  if (!activeBlock) return;
+  activeBlock.style.left = (e.touches[0].clientX - offsetX) + "px";
+  activeBlock.style.top = (e.touches[0].clientY - offsetY) + "px";
+}
 
-<!--
-  <<< Author notes: Footer >>>
-  Add a link to get support, GitHub status page, code of conduct, license link.
--->
+function onTouchEnd(e) {
+  const dropX = e.changedTouches[0].clientX;
+  const dropY = e.changedTouches[0].clientY;
+  const gridRect = grid.getBoundingClientRect();
 
----
+  const shape = JSON.parse(activeBlock.dataset.shape);
+  let col = Math.floor((dropX - gridRect.left) / 32);
+  let row = Math.floor((dropY - gridRect.top) / 32);
 
-Get help: [Post in our discussion board](https://github.com/orgs/skills/discussions/categories/github-pages) &bull; [Review the GitHub status page](https://www.githubstatus.com/)
+  col = Math.max(0, col);
+  row = Math.max(0, row);
 
-&copy; 2023 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+  let canPlace = true;
 
-</footer>
+  shapeLoop:
+  for (let y = 0; y < shape.length; y++) {
+    for (let x = 0; x < shape[y].length; x++) {
+      if (shape[y][x]) {
+        const i = (row + y) * 10 + (col + x);
+        if (row + y >= 10 || col + x >= 10 || !gridCells[i] || gridCells[i].classList.contains("filled")) {
+          canPlace = false;
+          break shapeLoop;
+        }
+      }
+    }
+  }
+
+  if (canPlace) {
+    for (let y = 0; y < shape.length; y++) {
+      for (let x = 0; x < shape[y].length; x++) {
+        if (shape[y][x]) {
+          const i = (row + y) * 10 + (col + x);
+          gridCells[i].classList.add("filled");
+          gridCells[i].style.setProperty('--block-color', activeBlock.style.getPropertyValue('--block-color'));
+          gridCells[i].style.backgroundColor = activeBlock.style.getPropertyValue('--block-color');
+        }
+      }
+    }
+    score += 10;
+    clearLines();
+    generateBlocks();
+  }
+
+  if (activeBlock) activeBlock.remove();
+  activeBlock = null;
+  document.removeEventListener("touchmove", moveBlock);
+  document.removeEventListener("touchend", onTouchEnd);
+}
+
+function clearLines() {
+  for (let r = 0; r < 10; r++) {
+    let fullRow = true;
+    for (let c = 0; c < 10; c++) {
+      if (!gridCells[r * 10 + c].classList.contains("filled")) {
+        fullRow = false;
+        break;
+      }
+    }
+    if (fullRow) {
+      for (let c = 0; c < 10; c++) {
+        gridCells[r * 10 + c].classList.remove("filled");
+        gridCells[r * 10 + c].style.backgroundColor = "#000";
+      }
+      score += 50;
+    }
+  }
+  scoreDisplay.textContent = "POIN INGET KOMTOL: " + score;
+}
+
+generateBlocks();
+
+  </script>
+</body>
+</html
