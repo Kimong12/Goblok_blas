@@ -1,75 +1,238 @@
-<header>
 
-<!--
-  <<< Author notes: Course header >>>
-  Include a 1280×640 image, course title in sentence case, and a concise description in emphasis.
-  In your repository settings: enable template repository, add your 1280×640 social image, auto delete head branches.
-  Add your open source license, GitHub uses MIT license.
--->
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kenangan Lucu Bareng Pacar</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive;
+      background: url('naila.jpg') center/cover no-repeat;
+      overflow-x: hidden;
+      transition: background 2s ease;
+    }
 
-# GitHub Pages
+    .gate {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      animation: fadeIn 1s ease;
+    }
 
-_Create a site or blog from your GitHub repositories with GitHub Pages._
+    .hidden {
+      display: none;
+    }
 
-</header>
+    .question {
+      margin: 10px 0;
+      background-color: #add8e6;
+      padding: 20px;
+      border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+      text-align: center;
+      color: black;
+      max-width: 90%;
+      animation: fadeIn 1s ease;
+    }
 
-<!--
-  <<< Author notes: Course start >>>
-  Include start button, a note about Actions minutes,
-  and tell the learner why they should take the course.
--->
+    .button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: #FFFFD0;
+      color: black;
+      cursor: pointer;
+    }
 
-## Welcome
+    .falling-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
 
-With GitHub Pages, you can host project blogs, documentation, resumes, portfolios, or any other static content you'd like. Your GitHub repository can easily become its own website. In this course, we'll show you how to set up your own site or blog using GitHub Pages.
+    .heart {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: url('https://cdn-icons-png.flaticon.com/512/833/833472.png') no-repeat center/contain;
+      animation: fall 5s linear infinite;
+    }
 
-- **Who is this for**: Beginners, students, project maintainers, small businesses.
-- **What you'll learn**: How to build a GitHub Pages site.
-- **What you'll build**: We'll build a simple GitHub Pages site with a blog. We'll use [Jekyll](https://jekyllrb.com), a static site generator.
-- **Prerequisites**: If you need to learn about branches, commits, and pull requests, take [Introduction to GitHub](https://github.com/skills/introduction-to-github) first.
-- **How long**: This course takes less than one hour to complete.
+    @keyframes fall {
+      0% { transform: translateY(-100px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
 
-In this course, you will:
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
 
-1. Enable GitHub Pages
-2. Configure your site
-3. Customize your home page
-4. Create a blog post
-5. Merge your pull request
+    @keyframes slideUp {
+      0% {opacity: 0; transform: translateY(100px);}
+      100% {opacity: 1; transform: translateY(0);}
+    }
 
-### How to start this course
+    .content {
+      position: relative;
+      padding: 10px;
+      z-index: 1;
+      min-height: 100vh;
+      animation: slideUp 1s ease forwards;
+      background: url('Begron2.png') center/cover no-repeat;
+      color: black;
+    }
 
-<!-- For start course, run in JavaScript:
-'https://github.com/new?' + new URLSearchParams({
-  template_owner: 'skills',
-  template_name: 'github-pages',
-  owner: '@me',
-  name: 'skills-github-pages',
-  description: 'My clone repository',
-  visibility: 'public',
-}).toString()
--->
+    .text-box {
+      background-color: #f0f8ff;
+      display: inline-block;
+      padding: 15px 20px;
+      border-radius: 16px;
+      border: 3px solid #00bfff;
+      margin: 10px 0;
+      animation: fadeIn 2s ease;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
 
-[![start-course](https://user-images.githubusercontent.com/1221423/235727646-4a590299-ffe5-480d-8cd5-8194ea184546.svg)](https://github.com/new?template_owner=skills&template_name=github-pages&owner=%40me&name=skills-github-pages&description=My+clone+repository&visibility=public)
+    .photo-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      perspective: 1000px;
+    }
 
-1. Right-click **Start course** and open the link in a new tab.
-2. In the new tab, most of the prompts will automatically fill in for you.
-   - For owner, choose your personal account or an organization to host the repository.
-   - We recommend creating a public repository, as private repositories will [use Actions minutes](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions).
-   - Scroll down and click the **Create repository** button at the bottom of the form.
-3. After your new repository is created, wait about 20 seconds, then refresh the page. Follow the step-by-step instructions in the new repository's README.
+    .photo {
+      position: relative;
+      width: 150px;
+      transform: rotateZ(calc(-10deg + 20deg * var(--rotate))) scale(1);
+      margin: 10px;
+      background: white;
+      padding: 5px;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+      z-index: calc(1 + var(--rotate));
+    }
 
-<footer>
+    .photo:hover {
+      transform: scale(1.05) rotateZ(0deg);
+      z-index: 10;
+    }
 
-<!--
-  <<< Author notes: Footer >>>
-  Add a link to get support, GitHub status page, code of conduct, license link.
--->
+    .photo img {
+      width: 100%;
+      border-radius: 8px;
+    }
 
----
+    .caption {
+      font-size: 12px;
+      text-align: center;
+      margin-top: 4px;
+    }
 
-Get help: [Post in our discussion board](https://github.com/orgs/skills/discussions/categories/github-pages) &bull; [Review the GitHub status page](https://www.githubstatus.com/)
+    .wa-button {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 30px;
+    }
 
-&copy; 2023 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+  </style>
+</head>
+<body>
+  <div class="gate" id="gate">
+    <div class="question">
+      <p>1. Apakah sudah mendapatkan izin dari orangnya?</p>
+      <button class="button" onclick="checkGate(1, true)">Ya</button>
+      <button class="button" onclick="checkGate(1, false)">Tidak</button>
+    </div>
+    <div class="question hidden">
+      <p>2. Apakah kamu mantan pacar si cowo?</p>
+      <button class="button" onclick="checkGate(2, true)">Ya</button>
+      <button class="button" onclick="checkGate(2, false)">Tidak</button>
+    </div>
+    <div class="question hidden">
+      <p>3. Kepo banget ya?</p>
+      <button class="button" onclick="checkGate(3, true)">Iya banget</button>
+      <button class="button" onclick="checkGate(3, false)">Biasa aja</button>
+    </div>
+  </div>
 
-</footer>
+  <div class="falling-hearts" id="hearts"></div>
+
+  <div class="content hidden" id="content">
+    <h2 class="text-box">Hai semuanya kalian kenapa si kepo bngt!!!</h2>
+    <p class="text-box">Tanggal Jadian: 29 September 2023</p>
+    <p class="text-box">Tanggal Nikah (Aamiin!): 29 september 2032</p>
+
+    <div class="photo-grid">
+      <div class="photo" style="--rotate: 0.2;">
+        <img src="man1.jpg" alt="foto1" />
+        <div class="caption">12 Jan 2023 - Taman Kota</div>
+      </div>
+      <div class="photo" style="--rotate: -0.2;">
+        <img src="man2.jpg" alt="foto2" />
+        <div class="caption">20 Feb 2023 - Nonton Bareng</div>
+      </div>
+      <div class="photo" style="--rotate: 0;">
+        <img src="man3.jpg" />
+        <div class="caption">5 Mar 2023 - Makan Es Krim</div>
+      </div>
+    </div>
+
+    <div style="text-align: center;">
+      <a href="https://wa.me/6283877486039?text=Wah%20semoga%20langgeng%20yaaa" target="_blank" class="wa-button">
+        Kirim Ucapan via WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    function checkGate(step, answer) {
+      const questions = document.querySelectorAll('.question');
+      if (!answer) {
+        alert("Maaf, kamu tidak bisa mengakses halaman ini.");
+        return;
+      }
+      questions[currentStep].classList.add('hidden');
+      currentStep++;
+      if (currentStep < questions.length) {
+        setTimeout(() => {
+          questions[currentStep].classList.remove('hidden');
+        }, 700);
+      } else {
+        document.getElementById('gate').classList.add('hidden');
+        document.getElementById('content').classList.remove('hidden');
+        createHearts();
+      }
+    }
+
+    function createHearts() {
+      const heartsContainer = document.getElementById('hearts');
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        heart.style.filter = `hue-rotate(${Math.random() * 360}deg)`;
+        heartsContainer.appendChild(heart);
+      }
+    }
+  </script>
+</body>
+</html>
